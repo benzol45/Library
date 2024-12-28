@@ -1,4 +1,4 @@
-#Book service
+# Book service  
 Swagger: TODO 
 
 Supported operations with books:
@@ -12,6 +12,6 @@ Produced events:
 * Book is checked out by the member
 * Book is returned to the library
 
-TODO
+TODO:  
 -[ ] Build tutorial
 -[ ] DB diagram
