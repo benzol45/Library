@@ -1,9 +1,9 @@
 package my.benzol45.bookservice.controller
 
 import lombok.RequiredArgsConstructor
-import my.benzol45.bookservice.model.BookDto
-import my.benzol45.bookservice.model.BookImportDto
-import my.benzol45.bookservice.model.NewBookDto
+import my.benzol45.bookservice.model.response.BookDto
+import my.benzol45.bookservice.model.request.BookImportDto
+import my.benzol45.bookservice.model.request.NewBookDto
 import my.benzol45.bookservice.service.BookService
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
@@ -30,6 +30,12 @@ class BookController (
         @RequestParam(name = "author", required = false) author: String?
     ): List<BookDto> =
         bookService.getFilteredBooks(title, author)
+
+    @GetMapping("/{id}")
+    fun getBook(@PathVariable("id") id: Long): ResponseEntity<BookDto> =
+        bookService.getBook(id)
+            ?.let { ResponseEntity.ok(it) }
+            ?: ResponseEntity.notFound().build()
 
     @PostMapping("/import")
     fun importBook(@RequestBody book: BookImportDto): ResponseEntity<BookDto> =

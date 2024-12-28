@@ -1,8 +1,8 @@
 package my.benzol45.bookservice.mapper
 
 import my.benzol45.bookservice.domain.Book
-import my.benzol45.bookservice.model.BookDto
-import my.benzol45.bookservice.model.NewBookDto
+import my.benzol45.bookservice.model.response.BookDto
+import my.benzol45.bookservice.model.request.NewBookDto
 import org.mapstruct.Mapper
 
 @Mapper(componentModel = "spring")

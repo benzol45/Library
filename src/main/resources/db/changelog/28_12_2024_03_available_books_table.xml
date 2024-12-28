@@ -10,7 +10,7 @@
                 <constraints primaryKey="true" nullable="false" />
             </column>
             <column name="book_id" type="bigint">
-                <constraints nullable="false" />
+                <constraints nullable="false" unique="true"/>
             </column>
             <column name="amount" type="int" defaultValue="0">
                 <constraints nullable="false" />
