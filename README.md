@@ -1,5 +1,5 @@
 # Book service  
-Swagger: TODO 
+Swagger: http://localhost:8080/swagger-ui/index.html 
 
 Supported operations with books:
 * Add, edit, store and delete book info
@@ -11,7 +11,7 @@ Supported operations with members:
 * Register, block, unblock
 * Members notification (in the next version)
 
-Produced events:
+Produced events: (in the next version)
 * Book is checked out by the member
 * Book is returned to the library
 
