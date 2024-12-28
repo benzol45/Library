@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Positive
 
 data class BookImportDto(
-    @NotBlank
+    @field:NotBlank
     val isbn: String,
-    @Positive
+    @field:Positive
     val amount: Int)

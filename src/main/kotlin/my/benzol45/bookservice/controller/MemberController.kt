@@ -2,6 +2,7 @@ package my.benzol45.bookservice.controller
 
 import lombok.RequiredArgsConstructor
 import my.benzol45.bookservice.model.request.RegisterMemberDto
+import my.benzol45.bookservice.model.response.BookDto
 import my.benzol45.bookservice.model.response.MemberDto
 import my.benzol45.bookservice.service.MemberService
 import org.springframework.data.domain.Page
@@ -36,6 +37,10 @@ class MemberController (
         memberService.getMember(id)
             ?.let { ResponseEntity.ok(it) }
             ?: ResponseEntity.notFound().build()
+
+    @GetMapping("/{id}/books")
+    fun getMemberBooks(@PathVariable("id") id: Long): List<BookDto> =
+        memberService.getMemberBooks(id)
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

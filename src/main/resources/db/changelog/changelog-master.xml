@@ -16,5 +16,6 @@
     <include file="28_12_2024_01_books_table.xml" relativeToChangelogFile="true"/>
     <include file="28_12_2024_02_members_table.xml" relativeToChangelogFile="true"/>
     <include file="28_12_2024_03_available_books_table.xml" relativeToChangelogFile="true"/>
+    <include file="28_12_2024_04_checked_out_books_table.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

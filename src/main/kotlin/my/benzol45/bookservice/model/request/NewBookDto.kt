@@ -5,14 +5,14 @@ import jakarta.validation.constraints.Positive
 import java.time.LocalDate
 
 data class NewBookDto(
-    @NotBlank
+    @field:NotBlank
     val isbn: String,
     val author: String? = null,
-    @NotBlank
+    @field:NotBlank
     val title: String,
     val pages: Int? = null,
     val publisher: String? = null,
     val dateOfPublication: LocalDate? = null,
-    @Positive
+    @field:Positive
     val amount: Int
 )

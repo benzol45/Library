@@ -22,5 +22,8 @@ data class Member(
     var phone: String? = null,
 
     @Column(name = "block", nullable = false)
-    var block: Boolean
+    var block: Boolean,
+
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
+    var checkedOutBooks: MutableList<CheckedOutBook> = mutableListOf()
 )

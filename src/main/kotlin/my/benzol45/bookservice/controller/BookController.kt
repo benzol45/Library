@@ -3,8 +3,13 @@ package my.benzol45.bookservice.controller
 import lombok.RequiredArgsConstructor
 import my.benzol45.bookservice.model.response.BookDto
 import my.benzol45.bookservice.model.request.BookImportDto
+import my.benzol45.bookservice.model.request.CheckoutDto
+import my.benzol45.bookservice.model.request.MemberReferenceDto
 import my.benzol45.bookservice.model.request.NewBookDto
+import my.benzol45.bookservice.model.response.BookCheckedOutDto
+import my.benzol45.bookservice.model.response.BookReturnResultDto
 import my.benzol45.bookservice.service.BookService
+import my.benzol45.bookservice.service.CheckoutBookService
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.http.HttpStatus
@@ -15,7 +20,8 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/books")
 @RequiredArgsConstructor
 class BookController (
-    private val bookService: BookService
+    private val bookService: BookService,
+    private val checkoutBookService: CheckoutBookService
 ){
     @GetMapping
     fun getAllBooks(
@@ -51,5 +57,23 @@ class BookController (
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteBook(@PathVariable("id") id: Long) =  bookService.deleteBook(id)
+
+    @PatchMapping("/{id}/checkout")
+    fun checkoutBook(
+        @PathVariable("id") id: Long,
+        @RequestBody checkoutDto: CheckoutDto
+    ): ResponseEntity<BookCheckedOutDto>  =
+        checkoutBookService.checkoutBook(id, checkoutDto)
+            ?.let { ResponseEntity.ok(it) }
+            ?: ResponseEntity.notFound().build()
+
+    @PatchMapping("/{id}/return")
+    fun checkoutBook(
+        @PathVariable("id") id: Long,
+        @RequestBody memberRefDto: MemberReferenceDto
+    ): ResponseEntity<BookReturnResultDto>  =
+        checkoutBookService.returnBook(id, memberRefDto)
+            ?.let { ResponseEntity.ok(it) }
+            ?: ResponseEntity.notFound().build()
 
 }

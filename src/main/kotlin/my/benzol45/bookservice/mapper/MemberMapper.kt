@@ -11,5 +11,6 @@ interface MemberMapper {
     fun memberToMemberDTO(member: Member): MemberDto
 
     @Mapping(target = "block", constant = "false")
+    @Mapping(target = "checkedOutBooks", expression = "java(new java.util.ArrayList<>())")
     fun registerMemberDTOToMember(registerMemberDTO: RegisterMemberDto): Member
 }
