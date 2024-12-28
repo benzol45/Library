@@ -7,10 +7,11 @@ Supported operations with books:
 * Book checkout and returning
 
 Supported operations with members:
-* Register, block, unblock
+* Register
+* Block & unblock
 
 TODO:  
--[ ] Build tutorial
+-[ ] Build tutorial  
 -[ ] DB diagram
 
 Plans for the next release:
