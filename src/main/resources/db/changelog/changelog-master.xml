@@ -13,7 +13,8 @@
         <dbms type="postgresql"/>
     </preConditions>
 
-    <include file="28_12_2024_books_table.xml" relativeToChangelogFile="true"/>
-    <include file="28_12_2024_members_table.xml" relativeToChangelogFile="true"/>
+    <include file="28_12_2024_01_books_table.xml" relativeToChangelogFile="true"/>
+    <include file="28_12_2024_02_members_table.xml" relativeToChangelogFile="true"/>
+    <include file="28_12_2024_03_available_books_table.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

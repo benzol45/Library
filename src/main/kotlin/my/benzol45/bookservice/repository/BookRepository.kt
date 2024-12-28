@@ -16,4 +16,6 @@ interface BookRepository: JpaRepository<Book, Long> {
     """, nativeQuery = true)
     fun findAllByTitleAndAuthor(title: String?, author: String?): List<Book>
 
+    fun getFirstByIsbn(isbn: String): Book?
+
 }

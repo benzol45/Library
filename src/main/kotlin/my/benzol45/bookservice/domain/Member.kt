@@ -20,4 +20,7 @@ data class Member(
 
     @Column(name = "phone", nullable = true)
     var phone: String? = null,
+
+    @Column(name = "block", nullable = false)
+    var block: Boolean
 )

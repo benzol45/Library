@@ -4,23 +4,20 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
-    <changeSet author="MIKHAIL KALININ" id="28_12_2024_books_table">
-        <createTable tableName="books">
+    <changeSet author="MIKHAIL KALININ" id="28_12_2024_02_members_table">
+        <createTable tableName="members">
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false" />
             </column>
-            <column name="isbn" type="varchar">
-                <constraints unique="true" />
-            </column>
-            <column name="author" type="varchar" />
-            <column name="title" type="varchar">
+            <column name="name" type="varchar" />
+            <column name="surname" type="varchar">
                 <constraints nullable="false" />
             </column>
-            <column name="pages" type="int">
-                <constraints checkConstraint="pages > 0"/>
+            <column name="email" type="varchar" />
+            <column name="phone" type="varchar" />
+            <column name="block" type="boolean" defaultValue="false">
+                <constraints nullable="false" />
             </column>
-            <column name="publisher" type="varchar" />
-            <column name="date_of_publication" type="date" />
         </createTable>
     </changeSet>
 </databaseChangeLog>
