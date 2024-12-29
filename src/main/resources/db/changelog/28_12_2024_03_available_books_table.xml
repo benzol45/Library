@@ -1,0 +1,34 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="MIKHAIL KALININ" id="28_12_2024_03_available_books_table">
+        <createTable tableName="available_books">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="book_id" type="bigint">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="amount" type="int" defaultValue="0">
+                <constraints nullable="false" />
+            </column>
+            <column name="checked_out" type="int" defaultValue="0">
+                <constraints nullable="false" />
+            </column>
+            <column name="available" type="int" defaultValue="0">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="available_books"
+                baseColumnNames="book_id"
+                referencedTableName="books"
+                referencedColumnNames="id"
+                constraintName="fk_available_books_book_id"
+                onDelete="CASCADE" />
+    </changeSet>
+</databaseChangeLog>
