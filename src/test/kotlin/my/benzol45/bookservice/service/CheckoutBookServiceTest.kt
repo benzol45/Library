@@ -48,6 +48,7 @@ class CheckoutBookServiceTest {
 
     @Test
     fun `checkoutBook should successfully checkout a book`() {
+        // Arrange
         val book =getTestBook()
         val availableBook = getTestAvailableBook()
         val member = getTestMember()
@@ -61,8 +62,10 @@ class CheckoutBookServiceTest {
         Mockito.`when`(checkedOutBookRepository.save(any())).thenReturn(checkedOutBook)
         Mockito.`when`(checkedOutBookMapper.checkedOutBookToCheckedOutBookDTO(checkedOutBook)).thenReturn(bookCheckedOutDto)
 
+        // Act
         val result = checkoutBookService.checkoutBook(TEST_ID, checkoutDto)
 
+        // Assert
         assert(result != null)
         assert(result?.bookId == TEST_ID)
         assert(result?.memberId == TEST_ID)
@@ -70,6 +73,7 @@ class CheckoutBookServiceTest {
 
     @Test
     fun `checkoutBook should return null when book is not available`() {
+        // Arrange
         val book = getTestBook()
         val availableBook = getTestUnavailableBook()
         val checkoutDto = getTestCheckoutDto()
@@ -77,13 +81,16 @@ class CheckoutBookServiceTest {
         Mockito.`when`(bookRepository.findById(TEST_ID)).thenReturn(Optional.of(book))
         Mockito.`when`(availableBookRepository.findFirstByBook(book)).thenReturn(availableBook)
 
+        // Act
         val result = checkoutBookService.checkoutBook(TEST_ID, checkoutDto)
 
+        // Assert
         assert(result == null)
     }
 
     @Test
     fun `returnBook should successfully return an on-time result`() {
+        // Arrange
         val book = getTestBook()
         val availableBook = getTestAvailableBook()
         val member = getTestMember()
@@ -97,14 +104,17 @@ class CheckoutBookServiceTest {
         Mockito.`when`(checkedOutBookRepository.findFirstByMemberAndBook(member, book)).thenReturn(checkedOutBook)
         Mockito.`when`(checkedOutBookMapper.checkedOutBookToBookReturnResultDto(checkedOutBook)).thenReturn(bookReturnResultDto)
 
+        // Act
         val result = checkoutBookService.returnBook(TEST_ID, memberReferenceDto)
 
+        // Assert
         assert(result != null)
         assert(result?.onTime == true)
     }
 
     @Test
     fun `returnBook should return null when no checked out book found`() {
+        // Arrange
         val book = getTestBook()
         val availableBook = getTestUnavailableBook()
         val memberReferenceDto = getTestMemberReferenceDto()
@@ -112,8 +122,10 @@ class CheckoutBookServiceTest {
         Mockito.`when`(bookRepository.findById(TEST_ID)).thenReturn(Optional.of(book))
         Mockito.`when`(availableBookRepository.findFirstByBook(book)).thenReturn(availableBook)
 
+        // Act
         val result = checkoutBookService.returnBook(TEST_ID, memberReferenceDto)
 
+        // Assert
         assert(result == null)
     }
 
