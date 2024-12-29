@@ -6,9 +6,9 @@ import lombok.extern.log4j.Log4j
 import my.benzol45.bookservice.domain.AvailableBook
 import my.benzol45.bookservice.domain.Book
 import my.benzol45.bookservice.mapper.BookMapper
-import my.benzol45.bookservice.model.response.BookDto
 import my.benzol45.bookservice.model.request.BookImportDto
 import my.benzol45.bookservice.model.request.NewBookDto
+import my.benzol45.bookservice.model.response.BookDto
 import my.benzol45.bookservice.repository.AvailableBookRepository
 import my.benzol45.bookservice.repository.BookRepository
 import org.springframework.data.domain.Page
@@ -21,7 +21,8 @@ import org.springframework.stereotype.Service
 class BookService(
     private val bookRepository: BookRepository,
     private val availableBookRepository: AvailableBookRepository,
-    private val bookMapper: BookMapper
+    private val bookMapper: BookMapper,
+    private val bookImportService: BookImportService
 ) {
 
     fun getAllBooks(pageable: Pageable): Page<BookDto> =
@@ -36,7 +37,12 @@ class BookService(
         bookRepository.findById(id).orElse(null)
         ?.let(bookMapper::bookToBookDTO)
 
-    fun importBook(bookImportDto: BookImportDto): BookDto? =  TODO()
+    @Transactional
+    fun importBook(bookImportDto: BookImportDto): BookDto? =
+        bookRepository.getFirstByIsbn(bookImportDto.isbn)
+            ?.let { return bookMapper.bookToBookDTO(it) }
+            ?: let { bookImportService.importBook(bookImportDto) }
+                ?.let { newBookDto -> createBook(newBookDto) }
 
     @Transactional
     fun createBook(newBookDto: NewBookDto): BookDto {
