@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "my.benzol45"
-version = "0.0.1-SNAPSHOT"
+version = "1.0.0-SNAPSHOT"
 
 java {
 	toolchain {
