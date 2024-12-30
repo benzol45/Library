@@ -1,5 +1,8 @@
 package my.benzol45.bookservice.service
 
+import io.mockk.every
+import io.mockk.impl.annotations.MockK
+import io.mockk.junit5.MockKExtension
 import my.benzol45.bookservice.domain.AvailableBook
 import my.benzol45.bookservice.domain.Book
 import my.benzol45.bookservice.domain.CheckedOutBook
@@ -13,29 +16,25 @@ import my.benzol45.bookservice.repository.AvailableBookRepository
 import my.benzol45.bookservice.repository.BookRepository
 import my.benzol45.bookservice.repository.CheckedOutBookRepository
 import my.benzol45.bookservice.repository.MemberRepository
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.ArgumentMatchers.any
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.junit.jupiter.MockitoExtension
 import java.time.LocalDate
 import java.util.*
 
-@ExtendWith(MockitoExtension::class)
+@ExtendWith(MockKExtension::class)
 class CheckoutBookServiceTest {
-    @Mock
+    @MockK
     private lateinit var checkedOutBookRepository: CheckedOutBookRepository
-    @Mock
+    @MockK
     private lateinit var bookRepository: BookRepository
-    @Mock
+    @MockK
     private lateinit var availableBookRepository: AvailableBookRepository
-    @Mock
+    @MockK
     private lateinit var memberRepository: MemberRepository
-    @Mock
+    @MockK
     private lateinit var checkedOutBookMapper: CheckedOutBookMapper
-    @InjectMocks
+
     private lateinit var checkoutBookService: CheckoutBookService
 
     private val TEST_ID = 1L
@@ -46,6 +45,11 @@ class CheckoutBookServiceTest {
     private val TEST_AUTHOR = "Test Author"
     private val TEST_ISBN = "123456789012"
 
+    @BeforeEach
+    fun setUp() {
+        checkoutBookService = CheckoutBookService(checkedOutBookRepository, bookRepository, availableBookRepository, memberRepository, checkedOutBookMapper)
+    }
+    
     @Test
     fun `checkoutBook should successfully checkout a book`() {
         // Arrange
@@ -56,11 +60,12 @@ class CheckoutBookServiceTest {
         val checkedOutBook = getTestCheckedOutBook()
         val bookCheckedOutDto = getTestBookCheckedOutDto()
 
-        Mockito.`when`(bookRepository.findById(TEST_ID)).thenReturn(Optional.of(book))
-        Mockito.`when`(availableBookRepository.findFirstByBook(book)).thenReturn(availableBook)
-        Mockito.`when`(memberRepository.findById(TEST_ID)).thenReturn(Optional.of(member))
-        Mockito.`when`(checkedOutBookRepository.save(any())).thenReturn(checkedOutBook)
-        Mockito.`when`(checkedOutBookMapper.checkedOutBookToCheckedOutBookDTO(checkedOutBook)).thenReturn(bookCheckedOutDto)
+        every { bookRepository.findById(TEST_ID) } returns Optional.of(book)
+        every { availableBookRepository.findFirstByBook(book) } returns availableBook
+        every { availableBookRepository.save(any<AvailableBook>()) } returns availableBook
+        every { memberRepository.findById(TEST_ID) } returns Optional.of(member)
+        every { checkedOutBookRepository.save(any<CheckedOutBook>()) } returns checkedOutBook
+        every { checkedOutBookMapper.checkedOutBookToCheckedOutBookDTO(checkedOutBook) } returns bookCheckedOutDto
 
         // Act
         val result = checkoutBookService.checkoutBook(TEST_ID, checkoutDto)
@@ -78,8 +83,8 @@ class CheckoutBookServiceTest {
         val availableBook = getTestUnavailableBook()
         val checkoutDto = getTestCheckoutDto()
 
-        Mockito.`when`(bookRepository.findById(TEST_ID)).thenReturn(Optional.of(book))
-        Mockito.`when`(availableBookRepository.findFirstByBook(book)).thenReturn(availableBook)
+        every { bookRepository.findById(TEST_ID) } returns Optional.of(book)
+        every { availableBookRepository.findFirstByBook(book) } returns availableBook
 
         // Act
         val result = checkoutBookService.checkoutBook(TEST_ID, checkoutDto)
@@ -98,11 +103,13 @@ class CheckoutBookServiceTest {
         val memberReferenceDto = getTestMemberReferenceDto()
         val bookReturnResultDto = getTestBookReturnResultDto()
 
-        Mockito.`when`(bookRepository.findById(TEST_ID)).thenReturn(Optional.of(book))
-        Mockito.`when`(availableBookRepository.findFirstByBook(book)).thenReturn(availableBook)
-        Mockito.`when`(memberRepository.findById(TEST_ID)).thenReturn(Optional.of(member))
-        Mockito.`when`(checkedOutBookRepository.findFirstByMemberAndBook(member, book)).thenReturn(checkedOutBook)
-        Mockito.`when`(checkedOutBookMapper.checkedOutBookToBookReturnResultDto(checkedOutBook)).thenReturn(bookReturnResultDto)
+        every { bookRepository.findById(TEST_ID) } returns Optional.of(book)
+        every { availableBookRepository.findFirstByBook(book) } returns availableBook
+        every { availableBookRepository.save(any<AvailableBook>()) } returns availableBook
+        every { memberRepository.findById(TEST_ID) } returns Optional.of(member)
+        every { checkedOutBookRepository.findFirstByMemberAndBook(member, book) } returns checkedOutBook
+        every { checkedOutBookRepository.delete(any<CheckedOutBook>()) } returns Unit
+        every { checkedOutBookMapper.checkedOutBookToBookReturnResultDto(checkedOutBook) } returns bookReturnResultDto
 
         // Act
         val result = checkoutBookService.returnBook(TEST_ID, memberReferenceDto)
@@ -119,8 +126,8 @@ class CheckoutBookServiceTest {
         val availableBook = getTestUnavailableBook()
         val memberReferenceDto = getTestMemberReferenceDto()
 
-        Mockito.`when`(bookRepository.findById(TEST_ID)).thenReturn(Optional.of(book))
-        Mockito.`when`(availableBookRepository.findFirstByBook(book)).thenReturn(availableBook)
+        every { bookRepository.findById(TEST_ID) } returns Optional.of(book)
+        every { availableBookRepository.findFirstByBook(book) } returns availableBook
 
         // Act
         val result = checkoutBookService.returnBook(TEST_ID, memberReferenceDto)

@@ -1,5 +1,8 @@
 package my.benzol45.bookservice.service
 
+import io.mockk.every
+import io.mockk.impl.annotations.MockK
+import io.mockk.junit5.MockKExtension
 import my.benzol45.bookservice.domain.Book
 import my.benzol45.bookservice.domain.CheckedOutBook
 import my.benzol45.bookservice.domain.Member
@@ -9,27 +12,24 @@ import my.benzol45.bookservice.model.request.RegisterMemberDto
 import my.benzol45.bookservice.model.response.BookDto
 import my.benzol45.bookservice.model.response.MemberDto
 import my.benzol45.bookservice.repository.MemberRepository
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.junit.jupiter.MockitoExtension
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import java.time.LocalDate
 import java.util.*
 
-@ExtendWith(MockitoExtension::class)
+@ExtendWith(MockKExtension::class)
 class MemberServiceTest {
-    @Mock
+    @MockK
     private lateinit var memberRepository: MemberRepository
-    @Mock
+    @MockK
     private lateinit var memberMapper: MemberMapper
-    @Mock
+    @MockK
     private lateinit var bookMapper: BookMapper
-    @InjectMocks
+
     private lateinit var memberService: MemberService
 
     private val TEST_ID = 1L
@@ -40,6 +40,11 @@ class MemberServiceTest {
     private val TEST_AUTHOR = "Test Author"
     private val TEST_ISBN = "123456789012"
 
+    @BeforeEach
+    fun setUp() {
+        memberService = MemberService(memberRepository, memberMapper, bookMapper)
+    }
+
     @Test
     fun `getAllMembers should return a page of member DTOs`() {
         // Arrange
@@ -48,8 +53,8 @@ class MemberServiceTest {
         val memberDto = getTestMemberDto()
         val page: Page<Member> = PageImpl(listOf(member), pageable, 1)
 
-        Mockito.`when`(memberRepository.findAll(pageable)).thenReturn(page)
-        Mockito.`when`(memberMapper.memberToMemberDTO(member)).thenReturn(memberDto)
+        every { memberRepository.findAll(pageable) } returns page
+        every { memberMapper.memberToMemberDTO(member) } returns memberDto
 
         // Act
         val result = memberService.getAllMembers(pageable)
@@ -66,9 +71,8 @@ class MemberServiceTest {
         val memberDto = getTestMemberDto()
         val members = listOf(member)
 
-        Mockito.`when`(memberRepository.findAllBySurnameAndEmailAndPhone(TEST_SURNAME, TEST_EMAIL, TEST_PHONE))
-            .thenReturn(members)
-        Mockito.`when`(memberMapper.memberToMemberDTO(member)).thenReturn(memberDto)
+        every { memberRepository.findAllBySurnameAndEmailAndPhone(TEST_SURNAME, TEST_EMAIL, TEST_PHONE) } returns members
+        every { memberMapper.memberToMemberDTO(member) } returns memberDto
 
         // Act
         val result = memberService.getFilteredMembers(TEST_SURNAME, TEST_EMAIL, TEST_PHONE)
@@ -83,8 +87,8 @@ class MemberServiceTest {
         val member = getTestMember()
         val memberDto = getTestMemberDto()
 
-        Mockito.`when`(memberRepository.findById(TEST_ID)).thenReturn(Optional.of(member))
-        Mockito.`when`(memberMapper.memberToMemberDTO(member)).thenReturn(memberDto)
+        every { memberRepository.findById(TEST_ID) } returns Optional.of(member)
+        every { memberMapper.memberToMemberDTO(member) } returns memberDto
 
         // Act
         val result = memberService.getMember(TEST_ID)
@@ -103,8 +107,8 @@ class MemberServiceTest {
         member.checkedOutBooks = mutableListOf(checkedOutBook)
         val bookDto = getTestBookDto()
 
-        Mockito.`when`(memberRepository.findById(TEST_ID)).thenReturn(Optional.of(member))
-        Mockito.`when`(bookMapper.bookToBookDTO(book)).thenReturn(bookDto)
+        every { memberRepository.findById(TEST_ID) } returns Optional.of(member)
+        every { bookMapper.bookToBookDTO(book) } returns bookDto
 
         val result = memberService.getMemberBooks(TEST_ID)
 
@@ -120,9 +124,9 @@ class MemberServiceTest {
         val member = getTestMember()
         val memberDto = getTestMemberDto()
 
-        Mockito.`when`(memberMapper.registerMemberDTOToMember(registerMemberDto)).thenReturn(member)
-        Mockito.`when`(memberRepository.save(member)).thenReturn(member)
-        Mockito.`when`(memberMapper.memberToMemberDTO(member)).thenReturn(memberDto)
+        every { memberMapper.registerMemberDTOToMember(registerMemberDto) } returns member
+        every { memberRepository.save(member) } returns member
+        every { memberMapper.memberToMemberDTO(member) } returns memberDto
 
         // Act
         val result = memberService.createMember(registerMemberDto)
@@ -139,9 +143,9 @@ class MemberServiceTest {
         val memberDto = getTestBlockedMemberDto()
 
 
-        Mockito.`when`(memberRepository.findById(TEST_ID)).thenReturn(Optional.of(member))
-        Mockito.`when`(memberRepository.save(member)).thenReturn(updatedMember)
-        Mockito.`when`(memberMapper.memberToMemberDTO(updatedMember)).thenReturn(memberDto)
+        every { memberRepository.findById(TEST_ID) } returns Optional.of(member)
+        every { memberRepository.save(member) } returns updatedMember
+        every { memberMapper.memberToMemberDTO(updatedMember) } returns memberDto
 
         // Act
         val result = memberService.processBlockMember(TEST_ID, true)
