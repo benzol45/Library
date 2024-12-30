@@ -12,6 +12,6 @@ interface CheckedOutBookMapper {
     @Mapping(target = "memberId", source = "checkedOutBook.member.id")
     fun checkedOutBookToCheckedOutBookDTO(checkedOutBook: CheckedOutBook): BookCheckedOutDto
 
-    @Mapping(target = "onTime", expression = "java(checkedOutBook.getReturnDate().isBefore(LocalDate.now()))")
+    @Mapping(target = "onTime", expression = "java(checkedOutBook.getReturnDate().isAfter(LocalDate.now()))")
     fun checkedOutBookToBookReturnResultDto(checkedOutBook: CheckedOutBook): BookReturnResultDto
 }

@@ -54,6 +54,7 @@ class BookService(
 
         val availableBook:AvailableBook = availableBookRepository.findFirstByBook(book) ?: AvailableBook(book=book)
         availableBook.amount += newBookDto.amount
+        availableBook.available += newBookDto.amount
         availableBookRepository.save(availableBook)
 
         return bookMapper.bookToBookDTO(book)

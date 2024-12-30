@@ -1,6 +1,7 @@
 package my.benzol45.bookservice.Integration
 
 import my.benzol45.bookservice.model.response.BookDto
+import my.benzol45.bookservice.repository.AvailableBookRepository
 import my.benzol45.bookservice.repository.BookRepository
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.assertNotNull
@@ -20,7 +21,8 @@ import kotlin.test.assertTrue
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
 class BookIntegrationTest(
-    @Autowired private val bookRepository: BookRepository
+    @Autowired private val bookRepository: BookRepository,
+    @Autowired private val availableBookRepository: AvailableBookRepository
 ) {
     companion object {
         val postgresTestContainer = PostgreSQLContainer("postgres:15")
@@ -80,11 +82,15 @@ class BookIntegrationTest(
         assertEquals(HttpStatus.CREATED, response.statusCode)
         assertNotNull(response.body)
         val newBookId = response.body!!.id
-        with(bookRepository.findById(newBookId).orElseThrow()) {
+        val book = bookRepository.findById(newBookId).orElseThrow()
+        with(book) {
             assertEquals("Stephen King", author)
             assertEquals("The Shining", title)
             assertEquals("9780307743657", isbn)
         }
+        assertEquals(2, availableBookRepository.findFirstByBook(book)?.amount)
+        assertEquals(0, availableBookRepository.findFirstByBook(book)?.checkedOut)
+        assertEquals(2, availableBookRepository.findFirstByBook(book)?.available)
     }
 
     @Test
