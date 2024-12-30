@@ -68,7 +68,7 @@ class BookController (
             ?: ResponseEntity.notFound().build()
 
     @PatchMapping("/{id}/return")
-    fun checkoutBook(
+    fun returnBook(
         @PathVariable("id") id: Long,
         @RequestBody memberRefDto: MemberReferenceDto
     ): ResponseEntity<BookReturnResultDto>  =
