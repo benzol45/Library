@@ -1,5 +1,8 @@
 package my.benzol45.bookservice.service
 
+import io.mockk.every
+import io.mockk.impl.annotations.MockK
+import io.mockk.junit5.MockKExtension
 import my.benzol45.bookservice.domain.AvailableBook
 import my.benzol45.bookservice.domain.Book
 import my.benzol45.bookservice.mapper.BookMapper
@@ -8,34 +11,37 @@ import my.benzol45.bookservice.model.request.NewBookDto
 import my.benzol45.bookservice.model.response.BookDto
 import my.benzol45.bookservice.repository.AvailableBookRepository
 import my.benzol45.bookservice.repository.BookRepository
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.junit.jupiter.MockitoExtension
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
+import java.util.*
 
-@ExtendWith(MockitoExtension::class)
+@ExtendWith(MockKExtension::class)
 class BookServiceTest {
 
-    @Mock
+    @MockK
     private lateinit var bookRepository: BookRepository
-    @Mock
+    @MockK
     private lateinit var availableBookRepository: AvailableBookRepository
-    @Mock
+    @MockK
     private lateinit var bookMapper: BookMapper
-    @Mock
+    @MockK
     private lateinit var bookImportService: BookImportService
-    @InjectMocks
+
     private lateinit var bookService: BookService
 
     private val TEST_ID = 1L
     private val TEST_TITLE = "Test title"
     private val TEST_AUTHOR = "Test Author"
     private val TEST_ISBN = "123456789012"
+
+    @BeforeEach
+    fun setUp() {
+        bookService = BookService(bookRepository, availableBookRepository, bookMapper, bookImportService)
+    }
 
     @Test
     fun `getAllBooks should return a page of books`() {
@@ -45,8 +51,8 @@ class BookServiceTest {
         val bookDto = getTestBookDto()
         val bookPage = PageImpl(listOf(book), pageable, 1)
 
-        Mockito.`when`(bookRepository.findAll(pageable)).thenReturn(bookPage)
-        Mockito.`when`(bookMapper.bookToBookDTO(book)).thenReturn(bookDto)
+        every { bookRepository.findAll(pageable) } returns bookPage
+        every { bookMapper.bookToBookDTO(book) } returns bookDto
 
         // Act
         val result = bookService.getAllBooks(pageable)
@@ -63,8 +69,8 @@ class BookServiceTest {
         val book = getTestBook()
         val bookDto = getTestBookDto()
 
-        Mockito.`when`(bookRepository.findAllByTitleAndAuthor(TEST_TITLE, TEST_AUTHOR)).thenReturn(listOf(book))
-        Mockito.`when`(bookMapper.bookToBookDTO(book)).thenReturn(bookDto)
+        every { bookRepository.findAllByTitleAndAuthor(TEST_TITLE, TEST_AUTHOR) } returns listOf(book)
+        every { bookMapper.bookToBookDTO(book) } returns bookDto
 
         // Act
         val result = bookService.getFilteredBooks(TEST_TITLE, TEST_AUTHOR)
@@ -81,8 +87,8 @@ class BookServiceTest {
         val book = getTestBook()
         val bookDto = getTestBookDto()
 
-        Mockito.`when`(bookRepository.findById(TEST_ID)).thenReturn(java.util.Optional.of(book))
-        Mockito.`when`(bookMapper.bookToBookDTO(book)).thenReturn(bookDto)
+        every { bookRepository.findById(TEST_ID) } returns Optional.of(book)
+        every { bookMapper.bookToBookDTO(book) } returns bookDto
 
         // Act
         val result = bookService.getBook(TEST_ID)
@@ -98,15 +104,18 @@ class BookServiceTest {
         // Arrange
         val bookImportDto = getTestBookImportDto()
         val book = getTestBook()
+        val availableBook = getTestAvailableBook()
         val newBookDto = getTestNewBookDto()
         val bookDto = getTestBookDto()
 
-        Mockito.`when`(bookRepository.getFirstByIsbn(TEST_ISBN)).thenReturn(null)
-        Mockito.`when`(bookImportService.importBook(bookImportDto)).thenReturn(newBookDto)
-        Mockito.`when`(bookMapper.newBookDTOToBook(newBookDto)).thenReturn(book)
-        Mockito.`when`(bookRepository.save(book)).thenReturn(book)
-        Mockito.`when`(bookMapper.bookToBookDTO(book)).thenReturn(bookDto)
+        every { bookRepository.getFirstByIsbn(TEST_ISBN) } returns null
+        every { bookImportService.importBook(bookImportDto) } returns newBookDto
+        every { bookMapper.newBookDTOToBook(newBookDto) } returns book
+        every { bookRepository.save(book) } returns book
+        every { availableBookRepository.findFirstByBook(book) } returns availableBook
+        every { availableBookRepository.save(any<AvailableBook>()) } returns availableBook
 
+        every { bookMapper.bookToBookDTO(book) } returns bookDto
         // Act
         val result = bookService.importBook(bookImportDto)
 
@@ -124,12 +133,12 @@ class BookServiceTest {
         val availableBook = getTestAvailableBook()
         val bookDto = getTestBookDto()
 
-        Mockito.`when`(bookRepository.getFirstByIsbn(TEST_ISBN)).thenReturn(null)
-        Mockito.`when`(bookMapper.newBookDTOToBook(newBookDto)).thenReturn(book)
-        Mockito.`when`(bookRepository.save(book)).thenReturn(book)
-        Mockito.`when`(bookMapper.bookToBookDTO(book)).thenReturn(bookDto)
-        Mockito.`when`(availableBookRepository.findFirstByBook(book)).thenReturn(availableBook)
-        Mockito.`when`(availableBookRepository.save(Mockito.any(AvailableBook::class.java))).thenReturn(availableBook)
+        every { bookRepository.getFirstByIsbn(TEST_ISBN) } returns null
+        every { bookMapper.newBookDTOToBook(newBookDto) } returns book
+        every { bookRepository.save(book) } returns book
+        every { bookMapper.bookToBookDTO(book) } returns bookDto
+        every { availableBookRepository.findFirstByBook(book) } returns availableBook
+        every { availableBookRepository.save(any<AvailableBook>()) } returns availableBook
 
         // Act
         val result = bookService.createBook(newBookDto)
