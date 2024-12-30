@@ -12,7 +12,7 @@ interface MemberRepository: JpaRepository<Member, Long> {
         WHERE 
             (:surname IS NULL OR m.surname ILIKE CONCAT('%', :surname, '%'))
         AND 
-            (:author IS NULL OR m.email ILIKE CONCAT('%', :author, '%'))
+            (:email IS NULL OR m.email ILIKE CONCAT('%', :email, '%'))
         AND 
             (:phone IS NULL OR m.phone ILIKE CONCAT('%', :phone, '%'))
     """, nativeQuery = true)
