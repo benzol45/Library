@@ -24,6 +24,10 @@ data class Member(
     @Column(name = "block", nullable = false)
     var block: Boolean,
 
-    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "member", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     var checkedOutBooks: MutableList<CheckedOutBook> = mutableListOf()
-)
+) {
+    override fun toString(): String {
+        return "Member(id=$id, name=$name, surname='$surname', email=$email, phone=$phone, block=$block)"
+    }
+}

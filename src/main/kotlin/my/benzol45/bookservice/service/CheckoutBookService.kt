@@ -65,7 +65,7 @@ class CheckoutBookService(
             availableBookRepository.save(this)
         }
 
-        val bookReturnResultDto: BookReturnResultDto= checkedOutBookMapper.checkedOutBookToBookReturnResultDto(checkedOutBook)
+        val bookReturnResultDto: BookReturnResultDto = checkedOutBookMapper.checkedOutBookToBookReturnResultDto(checkedOutBook)
         checkedOutBookRepository.delete(checkedOutBook)
         return bookReturnResultDto
     }
