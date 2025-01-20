@@ -1,8 +1,6 @@
 package my.benzol45.bookservice.service
 
 import jakarta.transaction.Transactional
-import lombok.RequiredArgsConstructor
-import lombok.extern.log4j.Log4j
 import my.benzol45.bookservice.domain.AvailableBook
 import my.benzol45.bookservice.domain.Book
 import my.benzol45.bookservice.domain.CheckedOutBook
@@ -20,8 +18,6 @@ import org.springframework.stereotype.Service
 import java.time.LocalDate
 
 @Service
-@RequiredArgsConstructor
-@Log4j
 class CheckoutBookService(
     private val checkedOutBookRepository: CheckedOutBookRepository,
     private val bookRepository: BookRepository,

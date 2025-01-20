@@ -1,7 +1,6 @@
 package my.benzol45.bookservice.service
 
-import lombok.RequiredArgsConstructor
-import lombok.extern.log4j.Log4j
+
 import my.benzol45.bookservice.domain.CheckedOutBook
 import my.benzol45.bookservice.mapper.BookMapper
 import my.benzol45.bookservice.mapper.MemberMapper
@@ -14,8 +13,6 @@ import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 
 @Service
-@Log4j
-@RequiredArgsConstructor
 class MemberService (
     private val memberRepository: MemberRepository,
     private val memberMapper: MemberMapper,
