@@ -1,7 +1,6 @@
 package my.benzol45.bookservice.service.impl
 
 import com.fasterxml.jackson.core.JsonProcessingException
-import lombok.RequiredArgsConstructor
 import my.benzol45.bookservice.mapper.BookMapper
 import my.benzol45.bookservice.model.request.BookImportDto
 import my.benzol45.bookservice.model.request.NewBookDto
@@ -17,7 +16,6 @@ import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestClient
 
 @Service
-@RequiredArgsConstructor
 class BookImportServiceOpenLibraryImpl(
     private val restClient: RestClient,
     private val bookMapper: BookMapper

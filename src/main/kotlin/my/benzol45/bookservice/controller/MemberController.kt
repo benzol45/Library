@@ -1,6 +1,5 @@
 package my.benzol45.bookservice.controller
 
-import lombok.RequiredArgsConstructor
 import my.benzol45.bookservice.model.request.RegisterMemberDto
 import my.benzol45.bookservice.model.response.BookDto
 import my.benzol45.bookservice.model.response.MemberDto
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/members")
-@RequiredArgsConstructor
 class MemberController (
     private val memberService: MemberService
 ){
