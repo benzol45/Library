@@ -1,6 +1,5 @@
 package my.benzol45.bookservice.controller
 
-import lombok.RequiredArgsConstructor
 import my.benzol45.bookservice.model.response.BookDto
 import my.benzol45.bookservice.model.request.BookImportDto
 import my.benzol45.bookservice.model.request.CheckoutDto
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/books")
-@RequiredArgsConstructor
 class BookController (
     private val bookService: BookService,
     private val checkoutBookService: CheckoutBookService
